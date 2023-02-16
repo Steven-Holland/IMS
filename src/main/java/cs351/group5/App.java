@@ -2,20 +2,37 @@ package cs351.group5;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.dynamodbv2.*;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.*;
+import com.amazonaws.services.dynamodbv2.model.DeleteItemRequest;
 import com.amazonaws.services.dynamodbv2.model.ListTablesResult;
 
+/*
+Functions:
+    getTable(int storeID)
+        Returns the Table object for the storeID that was supplied.
+    getItemInfo(int storeID, int itemID)
+        Returns in json the attributes of the item searched for.
+    newItem(int storeID, int itemID, String itemCategory, int itemExpiration,boolean itemExpires, String itemName,
+                                                                                  int itemPrice, int itemQuantity)
+        Adds a new item to the inventory database of the storeID supplied.
+    removeItem(int storeID, int itemID)
+        Removes an item from the inventory database of the storeID supplied.
+
+Notes:
+    If you do newItem() to an itemID that already exists, it will overwrite the old values
+    The removeItem() will not fail if the item being removed does not exist.
+*/
 public class App
 {
     public static void main( String[] args )
     {
         //System.out.println(getItemInfo(2044, 1135)); //example code to pul item info based on storeid and itemid
-        //newItem(2044, 2001, "Cards", 1, false, "Funny Card", 5, 10); //example code to add new item to table
+        //newItem(2044, 2002, "Cards", 1, false, "Funny Card", 5, 10); //example code to add new item to table
+        //removeItem(2044, 2001);
     }
 
     public static Table getTable(int storeID)
@@ -60,5 +77,10 @@ public class App
                 .withInt("Price", itemPrice)
                 .withInt("Quantity", itemQuantity);
         currentTable.putItem(newItem);
+    }
+    public static void removeItem(int storeID, int itemID)
+    {
+        Table currentTable = getTable(storeID);
+        DeleteItemOutcome removedItem = currentTable.deleteItem("ItemID", itemID);
     }
 }
