@@ -7,8 +7,10 @@ import com.amazonaws.services.dynamodbv2.*;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.*;
+import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
 import com.amazonaws.services.dynamodbv2.model.DeleteItemRequest;
 import com.amazonaws.services.dynamodbv2.model.ListTablesResult;
+import com.amazonaws.services.mediastoredata.model.ListItemsResult;
 
 /*
 Functions:
@@ -16,6 +18,8 @@ Functions:
         Returns the Table object for the storeID that was supplied.
     getItemInfo(int storeID, int itemID)
         Returns in json the attributes of the item searched for.
+    getAllItems(int storeID)
+        Returns the entire database in json for the specified storeID
     newItem(int storeID, int itemID, String itemCategory, int itemExpiration,boolean itemExpires, String itemName,
                                                                                   int itemPrice, int itemQuantity)
         Adds a new item to the inventory database of the storeID supplied.
@@ -31,6 +35,7 @@ public class App
     public static void main( String[] args )
     {
         //System.out.println(getItemInfo(2044, 1135)); //example code to pul item info based on storeid and itemid
+        //System.out.println(getAllItems(2044));
         //newItem(2044, 2002, "Cards", 1, false, "Funny Card", 5, 10); //example code to add new item to table
         //removeItem(2044, 2001);
     }
@@ -52,6 +57,22 @@ public class App
             }
         }
         return selectedTable;
+    }
+    public static String getAllItems(int storeID)
+    {
+        String returnString = "";
+        DynamoDB dynamoDB = new DynamoDB(new AmazonDynamoDBClient(
+                new ProfileCredentialsProvider()));
+        Table selectedTable = getTable(storeID);
+        Item currentItem = null; //looks up item
+        ItemCollection<ScanOutcome> allItems = selectedTable.scan();
+        Iterator<Item> allItemsIterator = allItems.iterator();
+        while (allItemsIterator.hasNext())
+        {
+            currentItem = allItemsIterator.next();
+            returnString += currentItem.toJSONPretty();
+        }
+        return returnString; //returns item info (json)
     }
 
     public static String getItemInfo(int storeID, int itemID)
