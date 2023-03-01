@@ -53,7 +53,7 @@ public class App extends Application {
         //removeItem(2044, 2001);
     }
 
-    public static Table getTable(int storeID)
+    public static Table getTable(String storeID)
     {
         String tableName = "PartySuppliesStore" + storeID;
         Table selectedTable = null;
@@ -72,7 +72,7 @@ public class App extends Application {
         return selectedTable;
     }
 
-    public static String getAllItems(int storeID)
+    public static String getAllItems(String storeID)
     {
         String returnString = "";
         DynamoDB dynamoDB = new DynamoDB(new AmazonDynamoDBClient(
@@ -89,7 +89,7 @@ public class App extends Application {
         return returnString; //returns item info (json)
     }
 
-    public static String getItemInfo(int storeID, int itemID)
+    public static String getItemInfo(String storeID, int itemID)
     {
         Table selectedTable = getTable(storeID);
         Item currentItem = selectedTable.getItem("ItemID", itemID); //looks up item
@@ -98,7 +98,7 @@ public class App extends Application {
 
     public static void newItem
             (
-                    int storeID, int itemID, String itemCategory, int itemExpiration,
+                    String storeID, int itemID, String itemCategory, String itemExpiration,
                     boolean itemExpires, String itemName, int itemPrice, int itemQuantity
             )
     {
@@ -106,14 +106,14 @@ public class App extends Application {
         Item newItem = new Item()
                 .withPrimaryKey("ItemID", itemID)
                 .withString("Category", itemCategory)
-                .withInt("Expiration", itemExpiration)
+                .withString("Expiration", itemExpiration)
                 .withBoolean("Expires", itemExpires)
                 .withString("Name", itemName)
                 .withInt("Price", itemPrice)
                 .withInt("Quantity", itemQuantity);
         currentTable.putItem(newItem);
     }
-    public static void removeItem(int storeID, int itemID)
+    public static void removeItem(String storeID, int itemID)
     {
         Table currentTable = getTable(storeID);
         DeleteItemOutcome removedItem = currentTable.deleteItem("ItemID", itemID);

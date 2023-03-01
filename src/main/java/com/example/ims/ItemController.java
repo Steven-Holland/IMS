@@ -2,10 +2,13 @@ package com.example.ims;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -32,6 +35,8 @@ public class ItemController implements Initializable {
     @FXML
     private Label text_warning;
 
+    SharedStorage storage = SharedStorage.getInstance();
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         category_selector.getItems().addAll(categories);
@@ -41,6 +46,9 @@ public class ItemController implements Initializable {
     private void addItem(ActionEvent event){
         if(checkFields()) {
             // add item to the database
+            /*App.newItem(storage.getStore(), Integer.parseInt(text_id.getText()), category_selector.getValue(),
+                        expiration_date.getValue().toString(), true, text_name.getText(),
+                        Integer.parseInt(text_price.getText()), Integer.parseInt(text_quantity.getText()));*/
 
             Stage stage = (Stage) btn_add.getScene().getWindow();
             stage.close();

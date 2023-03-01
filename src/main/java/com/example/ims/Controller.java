@@ -40,14 +40,13 @@ public class Controller implements Initializable{
     @FXML
     private Button btn_add;
 
-    public Controller(){
-        //no args constructor
-    }
+    SharedStorage storage = SharedStorage.getInstance();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         storeSelector.getItems().addAll(stores);
         storeSelector.setValue(stores[0]);
+        storeSelector.setOnAction(this::updateStore);
 
         pane_dash.toFront();
         pane_dash.setVisible(true);
@@ -120,4 +119,10 @@ public class Controller implements Initializable{
             e.printStackTrace();
         }
     }
+
+    @FXML
+    private void updateStore(ActionEvent event){
+        storage.setStore(storeSelector.getValue());
+    }
+
 }
