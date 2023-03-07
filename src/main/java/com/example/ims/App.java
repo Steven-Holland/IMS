@@ -1,5 +1,7 @@
 package com.example.ims;
 
+import com.amazonaws.auth.*;
+import com.amazonaws.auth.BasicSessionCredentials;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.dynamodbv2.*;
 import com.amazonaws.services.dynamodbv2.document.*;
@@ -12,6 +14,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Iterator;
+
+//import org.json.CDL;
+//import org.json.JSONArray;
+//import org.json.JSONTokener;
 
 /*
 Functions:
@@ -47,7 +53,8 @@ public class App extends Application {
     public static void main( String[] args )
     {
         launch();
-        //System.out.println(getItemInfo(2044, 1135)); //example code to pul item info based on storeid and itemid
+        System.out.println("hi");
+        System.out.println(getItemInfo(2044, 1135)); //example code to pul item info based on storeid and itemid
         //System.out.println(getAllItems(2044));
         //newItem(2044, 2002, "Cards", 1, false, "Funny Card", 5, 10); //example code to add new item to table
         //removeItem(2044, 2001);
@@ -55,20 +62,23 @@ public class App extends Application {
 
     public static Table getTable(int storeID)
     {
+        BasicAWSCredentials awsCreds = new BasicAWSCredentials("AKIAZ7JQH3BPAPLTMAXD", "zgg7fr/GNgCjL1HrCmsn41BNHE4iQUFS55kt8Jhz");
         String tableName = "PartySuppliesStore" + storeID;
         Table selectedTable = null;
-        DynamoDB dynamoDB = new DynamoDB(new AmazonDynamoDBClient(
-                new ProfileCredentialsProvider()));
-        TableCollection<ListTablesResult> tables = dynamoDB.listTables(); //lists all tables
-        Iterator<Table> iterator = tables.iterator();
-        while (iterator.hasNext()) { //loops through all tables
-            Table tempTable = iterator.next();
-            if(tempTable.getTableName().equalsIgnoreCase(tableName)) //if current table=wanted table
-            {
-                selectedTable = tempTable;
-                break;
-            }
-        }
+        //DynamoDB dynamoDB = new DynamoDB(new AmazonDynamoDBClient(
+        //        awsCreds));
+        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().build();
+        DynamoDB dynamoDB = new DynamoDB(client);
+//        TableCollection<ListTablesResult> tables = dynamoDB.listTables(); //lists all tables
+//        Iterator<Table> iterator = tables.iterator();
+//        while (iterator.hasNext()) { //loops through all tables
+//            Table tempTable = iterator.next();
+//            if(tempTable.getTableName().equalsIgnoreCase(tableName)) //if current table=wanted table
+//            {
+//                selectedTable = tempTable;
+//                break;
+//            }
+//        }
         return selectedTable;
     }
 

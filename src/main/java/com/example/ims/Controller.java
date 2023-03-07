@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class Controller implements Initializable{
+public class Controller extends DataController implements Initializable{
 
     @FXML
     private Pane pane_dash;
@@ -60,6 +60,7 @@ public class Controller implements Initializable{
             try {
                 final int j = i;
                 nodes[i] = FXMLLoader.load(getClass().getResource("item.fxml"));
+               // staticTextBox1.setText(App.getItemInfo(2044, 1135));
                 box_items.getChildren().add(nodes[i]);
             } catch (IOException e) {
                 e.printStackTrace();
