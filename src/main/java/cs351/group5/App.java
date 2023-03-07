@@ -1,17 +1,16 @@
-package com.example.ims;
-
+package cs351.group5;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.dynamodbv2.*;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.*;
+import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
+import com.amazonaws.services.dynamodbv2.model.DeleteItemRequest;
 import com.amazonaws.services.dynamodbv2.model.ListTablesResult;
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.util.Iterator;
+import com.amazonaws.services.mediastoredata.model.ListItemsResult;
 
 /*
 Functions:
@@ -26,34 +25,22 @@ Functions:
         Adds a new item to the inventory database of the storeID supplied.
     removeItem(int storeID, int itemID)
         Removes an item from the inventory database of the storeID supplied.
+
 Notes:
     If you do newItem() to an itemID that already exists, it will overwrite the old values
     The removeItem() will not fail if the item being removed does not exist.
 */
-
-public class App extends Application {
-    public static Stage stage_primary; // application's primary stage
-
-    @Override
-    public void start(Stage stage_primary) throws IOException {
-        this.stage_primary = stage_primary;
-
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("home.fxml"));
-        Scene scene = new Scene((Parent) fxmlLoader.load(), 850, 500);
-        this.stage_primary.setTitle("Inventory Management System");
-        this.stage_primary.setScene(scene);
-        this.stage_primary.show();
-    }
+public class App
+{
     public static void main( String[] args )
     {
-        launch();
         //System.out.println(getItemInfo(2044, 1135)); //example code to pul item info based on storeid and itemid
         //System.out.println(getAllItems(2044));
         //newItem(2044, 2002, "Cards", 1, false, "Funny Card", 5, 10); //example code to add new item to table
         //removeItem(2044, 2001);
     }
 
-    public static Table getTable(String storeID)
+    public static Table getTable(int storeID)
     {
         String tableName = "PartySuppliesStore" + storeID;
         Table selectedTable = null;
@@ -71,8 +58,7 @@ public class App extends Application {
         }
         return selectedTable;
     }
-
-    public static String getAllItems(String storeID)
+    public static String getAllItems(int storeID)
     {
         String returnString = "";
         DynamoDB dynamoDB = new DynamoDB(new AmazonDynamoDBClient(
@@ -89,7 +75,7 @@ public class App extends Application {
         return returnString; //returns item info (json)
     }
 
-    public static String getItemInfo(String storeID, int itemID)
+    public static String getItemInfo(int storeID, int itemID)
     {
         Table selectedTable = getTable(storeID);
         Item currentItem = selectedTable.getItem("ItemID", itemID); //looks up item
@@ -98,25 +84,24 @@ public class App extends Application {
 
     public static void newItem
             (
-                    String storeID, int itemID, String itemCategory, String itemExpiration,
-                    boolean itemExpires, String itemName, int itemPrice, int itemQuantity
+            int storeID, int itemID, String itemCategory, int itemExpiration,
+                boolean itemExpires, String itemName, int itemPrice, int itemQuantity
             )
     {
         Table currentTable = getTable(storeID);
         Item newItem = new Item()
                 .withPrimaryKey("ItemID", itemID)
                 .withString("Category", itemCategory)
-                .withString("Expiration", itemExpiration)
+                .withInt("Expiration", itemExpiration)
                 .withBoolean("Expires", itemExpires)
                 .withString("Name", itemName)
                 .withInt("Price", itemPrice)
                 .withInt("Quantity", itemQuantity);
         currentTable.putItem(newItem);
     }
-    public static void removeItem(String storeID, int itemID)
+    public static void removeItem(int storeID, int itemID)
     {
         Table currentTable = getTable(storeID);
         DeleteItemOutcome removedItem = currentTable.deleteItem("ItemID", itemID);
     }
-
 }
