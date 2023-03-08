@@ -51,7 +51,7 @@ public class App
 
     public static Table getTable(int storeID)
     {
-        BasicAWSCredentials awsCreds = new BasicAWSCredentials("AKIAZ7JQH3BPAPLTMAXD", "zgg7fr/GNgCjL1HrCmsn41BNHE4iQUFS55kt8Jhz");
+        BasicAWSCredentials awsCreds = new BasicAWSCredentials("", "");
         String tableName = "PartySuppliesStore" + storeID;
         Table selectedTable = null;
         DynamoDB dynamoDB = new DynamoDB(new AmazonDynamoDBClient(
