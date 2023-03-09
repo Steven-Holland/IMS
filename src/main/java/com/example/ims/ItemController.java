@@ -55,9 +55,10 @@ public class ItemController implements Initializable {
     private void addItem(ActionEvent event){
         if(checkFields()) {
             // add item to the database
-            /*App.newItem(storage.getStore(), Integer.parseInt(text_id.getText()), category_selector.getValue(),
-                        expiration_date.getEditor().getText(), true, text_name.getText(),
-                        Integer.parseInt(text_price.getText()), Integer.parseInt(text_quantity.getText()));*/
+            String[] item = {text_id.getText(), category_selector.getValue(),
+                    expiration_date.getEditor().getText(), text_name.getText(),
+                    text_price.getText(), text_quantity.getText()};
+            App.addItem(storage.getStore(), item);
 
             Stage stage = (Stage) btn_add.getScene().getWindow();
             stage.close();

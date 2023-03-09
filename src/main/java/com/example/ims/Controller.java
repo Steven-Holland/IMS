@@ -31,7 +31,7 @@ public class Controller implements Initializable{
 
     @FXML
     private ChoiceBox<String> storeSelector;
-    private String[] stores = {"All Stores", "Store1", "Store2"};
+    private String[] stores = App.listAllTables().toArray(new String[0]);
 
     @FXML
     private ToggleButton btn_dash;
