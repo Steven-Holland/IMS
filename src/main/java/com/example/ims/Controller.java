@@ -31,7 +31,7 @@ public class Controller extends DataController implements Initializable{
 
     @FXML
     private ChoiceBox<String> storeSelector;
-    private String[] stores = {"All Stores", "Store1", "Store2"};
+    private String[] stores = {"All Stores", "PartySuppliesStore2044", "PartyTown"};
 
     @FXML
     private ToggleButton btn_dash;
@@ -54,13 +54,25 @@ public class Controller extends DataController implements Initializable{
         pane_inventory.setVisible(false);
         btn_dash.setEffect(dropShadow);
 
+        //Stores the database into array and counts the amount of entries
+        String[][] allValues = App.scanItems(stores[1]);
+        int numRows = 0;
+        while(allValues[numRows][0] != null) {
+            numRows++;
+        }
+
         // fill inventory panel with some items
-        Node[] nodes = new Node[5];
+        Node[] nodes = new Node[numRows];
         for (int i = 0; i < nodes.length; i++) {
             try {
                 final int j = i;
                 nodes[i] = FXMLLoader.load(getClass().getResource("item.fxml"));
-               // staticTextBox1.setText(App.getItemInfo(2044, 1135));
+                staticTextBox1.setText(allValues[i][4]);
+                staticTextBox2.setText(allValues[i][5]);
+                staticTextBox3.setText(allValues[i][1]);
+                staticTextBox4.setText(allValues[i][3]);
+                staticTextBox5.setText(allValues[i][2]);
+                staticTextBox6.setText(allValues[i][0]);
                 box_items.getChildren().add(nodes[i]);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -88,8 +100,13 @@ public class Controller extends DataController implements Initializable{
             btn_inventory.setEffect(dropShadow);
             btn_dash.setEffect(null);
         }
+        else if(event.getSource()==storeSelector) {
+            /*if we can capture which option is selected we can then make it so
+              the nodes are removed from box items and then we add new nodes with
+              only items from the selected source
+             */
+        }
     }
-
     public void show_add_item_stage(){
         try{
             AnchorPane pane_add_item = FXMLLoader.load(getClass().getResource("new_item_box.fxml"));
@@ -116,6 +133,7 @@ public class Controller extends DataController implements Initializable{
             show_add_item_stage();
 
             Node node = FXMLLoader.load(getClass().getResource("item.fxml"));
+
             box_items.getChildren().add(node);
         } catch (IOException e) {
             e.printStackTrace();
