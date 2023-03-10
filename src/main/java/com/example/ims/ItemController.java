@@ -39,8 +39,6 @@ public class ItemController implements Initializable {
 
     SharedStorage storage = SharedStorage.getInstance();
 
-    String[]newValues = new String[10];
-    SharedStorage storage = SharedStorage.getInstance();
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         category_selector.getItems().addAll(categories);

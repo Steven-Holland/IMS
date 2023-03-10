@@ -72,7 +72,7 @@
         <HBox fx:id="topPane" layoutY="1.0" prefHeight="50.0" prefWidth="850.0" style="-fx-background-color: #C6C6C6;">
             <children>
                 <ImageView fitHeight="50.0" fitWidth="138.0" pickOnBounds="true" preserveRatio="true" />
-                <ChoiceBox fx:id="storeSelector" onAction="#storeChanged" prefHeight="49.0" prefWidth="177.0" style="-fx-background-color: #C1D18A;" />
+                <ChoiceBox fx:id="storeSelector" prefHeight="49.0" prefWidth="177.0" style="-fx-background-color: #C1D18A;" />
             </children>
         </HBox>
         <Pane fx:id="pane_inventory" layoutX="137.0" layoutY="51.0" prefHeight="450.0" prefWidth="713.0">

@@ -34,7 +34,10 @@ public class Controller extends DataController implements Initializable{
     @FXML
     private ChoiceBox<String> storeSelector;
 
-    private String[] stores = App.listAllTables().toArray(new String[0]);
+    private String[] db_stores = App.listAllTables().toArray(new String[0]);
+    private int num_stores = db_stores.length;
+    private String[] stores = new String[num_stores+1];
+
 
     @FXML
     private ToggleButton btn_dash;
@@ -50,46 +53,28 @@ public class Controller extends DataController implements Initializable{
     double inventoryValue = 0;
     int inventoryAmount = 0;
     SharedStorage storage = SharedStorage.getInstance();
+
     public Controller(){
         //no args constructor
     }
 
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        for(int i = 0; i < num_stores; i++){
+           stores[i] = db_stores[i];
+        }
+        stores[num_stores] = "All Stores";
+
         storeSelector.getItems().addAll(stores);
         storeSelector.setValue(stores[0]);
+        storeSelector.setValue(stores[0]);
         storeSelector.setOnAction(this::updateStore);
+        updateTable(stores[0]);
 
         pane_dash.toFront();
         pane_dash.setVisible(true);
         pane_inventory.setVisible(false);
         btn_dash.setEffect(dropShadow);
-
-        //Stores the database into array and counts the amount of entries
-//        String[][] allValues = App.scanItems(stores[1]);
-//        int numRows = 0;
-//        while(allValues[numRows][0] != null) {
-//            numRows++;
-//        }
-//
-//        // fill inventory panel with some items
-//        Node[] nodes = new Node[numRows];
-//        for (int i = 0; i < nodes.length; i++) {
-//            try {
-//                final int j = i;
-//                nodes[i] = FXMLLoader.load(getClass().getResource("item.fxml"));
-//                staticTextBox1.setText(allValues[i][4]);
-//                staticTextBox2.setText(allValues[i][5]);
-//                staticTextBox3.setText(allValues[i][1]);
-//                staticTextBox4.setText(allValues[i][3]);
-//                staticTextBox5.setText(allValues[i][2]);
-//                staticTextBox6.setText(allValues[i][0]);
-//                box_items.getChildren().add(nodes[i]);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
 
     }
 
@@ -105,12 +90,8 @@ public class Controller extends DataController implements Initializable{
     }
     private void updateTable(String currentStore) {
         String[][] allValues;
-        if (currentStore.contains("All Stores")) {
-            allValues = App.scanItems(stores[1]);
-        }
-        else {
-            allValues = App.scanItems(currentStore);
-        }
+        allValues = App.scanItems(currentStore);
+
         int numRows = 0;
         while(allValues[numRows][0] != null) {
             numRows++;
@@ -159,21 +140,6 @@ public class Controller extends DataController implements Initializable{
         }
     }
 
-    @FXML
-    private void storeChanged(ActionEvent actionEvent) {
-        if(storeSelector.getValue().contains("All Stores")) {
-            clearTable();
-            updateTable(stores[1]);
-            updateTable(stores[2]);
-            storage.setStore("PartyStore0001");
-        }
-        else {
-            clearTable();
-            updateTable(storeSelector.getValue());
-            storage.setStore(storeSelector.getValue());
-        }
-    }
-
     public void show_add_item_stage(){
         try{
             AnchorPane pane_add_item = FXMLLoader.load(getClass().getResource("new_item_box.fxml"));
@@ -210,7 +176,18 @@ public class Controller extends DataController implements Initializable{
 
     @FXML
     private void updateStore(ActionEvent event){
-        storage.setStore(storeSelector.getValue());
+        if(storeSelector.getValue().contains("All Stores")) {
+            clearTable();
+            for(String store : db_stores){
+                updateTable(store);
+            }
+            storage.setStore(stores[0]);
+        }
+        else {
+            clearTable();
+            updateTable(storeSelector.getValue());
+            storage.setStore(storeSelector.getValue());
+        }
     }
 
 }

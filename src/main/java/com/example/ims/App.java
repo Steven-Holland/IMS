@@ -145,29 +145,6 @@ public class App extends Application {
         }
     }
 
-
-    public static Map<String, AttributeValue> getItem(String tableName, String itemID ) {
-
-        HashMap<String,AttributeValue> keyToGet = new HashMap<>();
-        keyToGet.put("ItemID", AttributeValue.builder()
-                .s(itemID)
-                .build());
-
-        GetItemRequest request = GetItemRequest.builder()
-                .key(keyToGet)
-                .tableName(tableName)
-                .build();
-
-        try {
-            Map<String,AttributeValue> returnedItem = ddb.getItem(request).item();
-            return returnedItem;
-
-        } catch (DynamoDbException e) {
-            System.err.println(e.getMessage());
-            System.exit(1);
-        }
-    }
-
     public static List<String> listAllTables(){
 
         boolean moreTables = true;
