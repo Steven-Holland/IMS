@@ -33,7 +33,8 @@ public class Controller extends DataController implements Initializable{
 
     @FXML
     private ChoiceBox<String> storeSelector;
-    private String[] stores = {"All Stores", "PartyStore0001", "PartyStore0002"};
+
+    private String[] stores = App.listAllTables().toArray(new String[0]);
 
     @FXML
     private ToggleButton btn_dash;
@@ -41,6 +42,7 @@ public class Controller extends DataController implements Initializable{
     private ToggleButton btn_inventory;
     @FXML
     private Button btn_add;
+
     @FXML
     private Label label_value;
     @FXML
@@ -52,10 +54,12 @@ public class Controller extends DataController implements Initializable{
         //no args constructor
     }
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         storeSelector.getItems().addAll(stores);
         storeSelector.setValue(stores[0]);
+        storeSelector.setOnAction(this::updateStore);
 
         pane_dash.toFront();
         pane_dash.setVisible(true);
@@ -202,6 +206,11 @@ public class Controller extends DataController implements Initializable{
                 clearTable();
                 updateTable(storeSelector.getValue());
             }
+    }
+
+    @FXML
+    private void updateStore(ActionEvent event){
+        storage.setStore(storeSelector.getValue());
     }
 
 }

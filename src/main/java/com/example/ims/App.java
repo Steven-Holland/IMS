@@ -45,6 +45,7 @@ public class App extends Application {
         stage_primary.setScene(scene);
         stage_primary.show();
     }
+    
     public static void main( String[] args )
     {
         // Establish connection with DynamoDB
@@ -68,12 +69,14 @@ public class App extends Application {
             Set<String> keys = item.keySet();
             //System.out.println("Amazon DynamoDB table attributes: \n");
 
+
             for (String key1 : keys) {
                 System.out.format("%s: %s\n", key1, item.get(key1).toString());
             }
         } else {
             System.out.format("No item found!\n");
         }
+
 
 
         // Print all tables
@@ -114,13 +117,12 @@ public class App extends Application {
         return null;
     }
 
-    public static void addItem(String tableName, String[] values){
-        String[] column_names = {"ItemID", "Category", "Expiration",  "Name", "Price", "Quantity"};
+   public static void addItem(String tableName, String[] values){
+        String[] column_names = {"ItemID", "Name", "Category",  "Price", "Quantity", "Expiration"};
 
-        // Add all values to hashmap of attributes.
-        //Adding does not work because the ItemID value in the dynamodb is a integer not string
+        // Add all values to hashmap of attributes
         HashMap<String,AttributeValue> itemValues = new HashMap<>();
-        for(int i = 0; i <= 5; i++){
+        for(int i = 0; i < values.length; i++){
             itemValues.put(column_names[i], AttributeValue.builder().s(values[i]).build());
         }
 
@@ -137,6 +139,29 @@ public class App extends Application {
             System.err.format("Error: The Amazon DynamoDB table \"%s\" can't be found.\n", tableName);
             System.err.println("Be sure that it exists and that you've typed its name correctly!");
             System.exit(1);
+        } catch (DynamoDbException e) {
+            System.err.println(e.getMessage());
+            System.exit(1);
+        }
+    }
+
+
+    public static Map<String, AttributeValue> getItem(String tableName, String itemID ) {
+
+        HashMap<String,AttributeValue> keyToGet = new HashMap<>();
+        keyToGet.put("ItemID", AttributeValue.builder()
+                .s(itemID)
+                .build());
+
+        GetItemRequest request = GetItemRequest.builder()
+                .key(keyToGet)
+                .tableName(tableName)
+                .build();
+
+        try {
+            Map<String,AttributeValue> returnedItem = ddb.getItem(request).item();
+            return returnedItem;
+
         } catch (DynamoDbException e) {
             System.err.println(e.getMessage());
             System.exit(1);
@@ -165,7 +190,7 @@ public class App extends Application {
                 if (tableNames.size() > 0) {
                     return tableNames;
                 } else {
-                    //System.out.println("No tables found!");
+                    System.out.println("No tables found!");
                     System.exit(0);
                 }
 
@@ -175,31 +200,14 @@ public class App extends Application {
                 }
 
             } catch (DynamoDbException e) {
-                //System.err.println(e.getMessage());
+                System.err.println(e.getMessage());
                 System.exit(1);
             }
         }
         return tableNames;
     }
 
-    public static void deleteItem(String tableName, String itemID) {
-        HashMap<String,AttributeValue> keyToGet = new HashMap<>();
-        keyToGet.put("ItemID", AttributeValue.builder()
-                .s(itemID)
-                .build());
-
-        DeleteItemRequest deleteReq = DeleteItemRequest.builder()
-                .tableName(tableName)
-                .key(keyToGet)
-                .build();
-
-        try {
-            ddb.deleteItem(deleteReq);
-        } catch (DynamoDbException e) {
-            //System.err.println(e.getMessage());
-            System.exit(1);
-        }
-    }
+    
     public static String[][] scanItems(String tableName ) {
         ProfileCredentialsProvider credentialsProvider = ProfileCredentialsProvider.create();
         Region region = Region.US_EAST_1;
@@ -234,10 +242,28 @@ public class App extends Application {
             }
 
         } catch (DynamoDbException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
             System.exit(1);
         }
         return allValues;
     }
 
+    public static void deleteItem(String tableName, String itemID) {
+        HashMap<String,AttributeValue> keyToGet = new HashMap<>();
+        keyToGet.put("ItemID", AttributeValue.builder()
+                .s(itemID)
+                .build());
+
+        DeleteItemRequest deleteReq = DeleteItemRequest.builder()
+                .tableName(tableName)
+                .key(keyToGet)
+                .build();
+
+        try {
+            ddb.deleteItem(deleteReq);
+        } catch (DynamoDbException e) {
+            System.err.println(e.getMessage());
+            System.exit(1);
+        }
+    }
 }
