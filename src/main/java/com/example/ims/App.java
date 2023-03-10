@@ -45,6 +45,7 @@ public class App extends Application {
         stage_primary.setScene(scene);
         stage_primary.show();
     }
+    
     public static void main( String[] args )
     {
         // Establish connection with DynamoDB
@@ -59,14 +60,15 @@ public class App extends Application {
 
 
         /*--------------------------------------
-        * Example SDK Function Calls
-        * --------------------------------------*/
+         * Example SDK Function Calls
+         * --------------------------------------*/
 
         // Get item and print its attributes
         Map<String,AttributeValue> item = getItem("TestTable", "0002");
         if (item != null) {
             Set<String> keys = item.keySet();
-            System.out.println("Amazon DynamoDB table attributes: \n");
+            //System.out.println("Amazon DynamoDB table attributes: \n");
+
 
             for (String key1 : keys) {
                 System.out.format("%s: %s\n", key1, item.get(key1).toString());
@@ -76,12 +78,14 @@ public class App extends Application {
         }
 
 
+
         // Print all tables
-        System.out.println("\nAll available tables:");
+        //System.out.println("\nAll available tables:");
         for (String curName : listAllTables()) {
             System.out.format("* %s\n", curName);
         }
 
+       // scanItems("PartySuppliesStore2044");
         // Add a new item to the table
 /*        String[] new_item = {"0003", "Milk", "Consumable", "3.99", "12", "03/17/23"};
         addItem("TestTable", new_item);*/
@@ -113,7 +117,7 @@ public class App extends Application {
         return null;
     }
 
-    public static void addItem(String tableName, String[] values){
+   public static void addItem(String tableName, String[] values){
         String[] column_names = {"ItemID", "Name", "Category",  "Price", "Quantity", "Expiration"};
 
         // Add all values to hashmap of attributes
@@ -135,6 +139,29 @@ public class App extends Application {
             System.err.format("Error: The Amazon DynamoDB table \"%s\" can't be found.\n", tableName);
             System.err.println("Be sure that it exists and that you've typed its name correctly!");
             System.exit(1);
+        } catch (DynamoDbException e) {
+            System.err.println(e.getMessage());
+            System.exit(1);
+        }
+    }
+
+
+    public static Map<String, AttributeValue> getItem(String tableName, String itemID ) {
+
+        HashMap<String,AttributeValue> keyToGet = new HashMap<>();
+        keyToGet.put("ItemID", AttributeValue.builder()
+                .s(itemID)
+                .build());
+
+        GetItemRequest request = GetItemRequest.builder()
+                .key(keyToGet)
+                .tableName(tableName)
+                .build();
+
+        try {
+            Map<String,AttributeValue> returnedItem = ddb.getItem(request).item();
+            return returnedItem;
+
         } catch (DynamoDbException e) {
             System.err.println(e.getMessage());
             System.exit(1);
@@ -178,6 +205,47 @@ public class App extends Application {
             }
         }
         return tableNames;
+    }
+
+    
+    public static String[][] scanItems(String tableName ) {
+        ProfileCredentialsProvider credentialsProvider = ProfileCredentialsProvider.create();
+        Region region = Region.US_EAST_1;
+        ddb = DynamoDbClient.builder()
+                .credentialsProvider(credentialsProvider)
+                .region(region)
+                .build();
+        String[][] allValues = new String[500][500];
+        try {
+            ScanRequest scanRequest = ScanRequest.builder()
+                    .tableName(tableName)
+                    .build();
+            int dbRow = 0;
+            int dbColum = 0;
+            ScanResponse response = ddb.scan(scanRequest);
+            for (Map<String, AttributeValue> item : response.items()) {
+                Set<String> keys = item.keySet();
+                for (String key : keys) {
+                    String dbJunkValue = String.valueOf(item.get(key));
+                    Scanner removeExtra = new Scanner(dbJunkValue);
+                    removeExtra.useDelimiter("=");
+                    removeExtra.next();
+                    String dbSemiValue = removeExtra.next();
+                    String dbValue = dbSemiValue.substring(0, dbSemiValue.length() - 1);
+                    allValues[dbRow][dbColum] = dbValue;
+                    dbColum++;
+                    if(dbColum >= 6) {
+                        dbColum = 0;
+                        dbRow++;
+                    }
+                }
+            }
+
+        } catch (DynamoDbException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        return allValues;
     }
 
     public static void deleteItem(String tableName, String itemID) {

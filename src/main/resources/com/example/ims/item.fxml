@@ -5,7 +5,8 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="713.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/19">
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="713.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ims.DataController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -18,11 +19,11 @@
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <Label alignment="CENTER" prefHeight="40.0" prefWidth="119.0" style="-fx-border-style: solid;" text="Text" />
-        <Label alignment="CENTER" prefHeight="40.0" prefWidth="119.0" style="-fx-border-style: solid;" text="Text" GridPane.columnIndex="1" />
-        <Label alignment="CENTER" prefHeight="40.0" prefWidth="119.0" style="-fx-border-style: solid;" text="Text" GridPane.columnIndex="2" />
-        <Label alignment="CENTER" prefHeight="40.0" prefWidth="119.0" style="-fx-border-style: solid;" text="Text" GridPane.columnIndex="3" />
-        <Label alignment="CENTER" prefHeight="40.0" prefWidth="119.0" style="-fx-border-style: solid;" text="Text" GridPane.columnIndex="4" />
-        <Label alignment="CENTER" prefHeight="40.0" prefWidth="119.0" style="-fx-border-style: solid;" text="Text" GridPane.columnIndex="5" />
+        <Label fx:id="textBox1" alignment="CENTER" prefHeight="40.0" prefWidth="119.0" style="-fx-border-style: solid;" text="Text" />
+        <Label fx:id="textBox2" alignment="CENTER" prefHeight="40.0" prefWidth="119.0" style="-fx-border-style: solid;" text="Text" GridPane.columnIndex="1" />
+        <Label fx:id="textBox3" alignment="CENTER" prefHeight="40.0" prefWidth="119.0" style="-fx-border-style: solid;" text="Text" GridPane.columnIndex="2" />
+        <Label fx:id="textBox4" alignment="CENTER" prefHeight="40.0" prefWidth="119.0" style="-fx-border-style: solid;" text="Text" GridPane.columnIndex="3" />
+        <Label fx:id="textBox5" alignment="CENTER" prefHeight="40.0" prefWidth="119.0" style="-fx-border-style: solid;" text="Text" GridPane.columnIndex="4" />
+        <Label fx:id="textBox6" alignment="CENTER" prefHeight="40.0" prefWidth="119.0" style="-fx-border-style: solid;" text="Text" GridPane.columnIndex="5" />
     </children>
 </GridPane>
