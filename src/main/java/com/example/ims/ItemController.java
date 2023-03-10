@@ -32,6 +32,8 @@ public class ItemController implements Initializable {
     @FXML
     private Label text_warning;
 
+    String[]newValues = new String[10];
+    SharedStorage storage = SharedStorage.getInstance();
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         category_selector.getItems().addAll(categories);
@@ -41,15 +43,16 @@ public class ItemController implements Initializable {
     private void addItem(ActionEvent event){
         if(checkFields()) {
             // add item to the database
-            String[] newValues = new String[10];
+            //String[] newValues = new String[10];
             newValues[0] = text_id.getText();
-            newValues[1] = text_name.getText();
-            newValues[2] = category_selector.getValue();
-            newValues[3] = text_price.getText();
-            newValues[4] = text_quantity.getText();
-            newValues[5] = "blank";
+            newValues[1] = category_selector.getValue();
+            newValues[2] = String.valueOf(expiration_date.getValue());
+            newValues[3] = text_name.getText();
+            newValues[4] = text_price.getText();
+            newValues[5] = text_quantity.getText();
 
-            App.addItem("PartySuppliesStore2044", newValues);
+            App.addItem(storage.getStore(), newValues);
+
             Stage stage = (Stage) btn_add.getScene().getWindow();
             stage.close();
         }

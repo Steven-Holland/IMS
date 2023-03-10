@@ -120,7 +120,7 @@ public class App extends Application {
         // Add all values to hashmap of attributes.
         //Adding does not work because the ItemID value in the dynamodb is a integer not string
         HashMap<String,AttributeValue> itemValues = new HashMap<>();
-        for(int i = 0; i < 5; i++){
+        for(int i = 0; i <= 5; i++){
             itemValues.put(column_names[i], AttributeValue.builder().s(values[i]).build());
         }
 
