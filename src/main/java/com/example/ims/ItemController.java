@@ -26,7 +26,7 @@ public class ItemController implements Initializable {
     @FXML
     private ChoiceBox<String> category_selector;
     private String[] categories = {"Consumables", "Decorations", "Lighting",
-            "Cards", "Gift Cards", "Variety", "Other"};
+            "Cards", "Gift Cards", "Other"};
 
     @FXML
     private Button btn_add;

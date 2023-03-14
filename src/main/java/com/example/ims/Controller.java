@@ -102,7 +102,6 @@ public class Controller extends DataController implements Initializable{
             label_stock.setTextFill(Color.color(1,0,0));
         }
 
-
         value_chart.setData(pieChartData);
     }
     private void clearTable() {
@@ -145,19 +144,17 @@ public class Controller extends DataController implements Initializable{
                 }
 
                 boolean set = false;
-                System.out.println(pieChartData.size());
-                for(int j = 0; j < pieChartData.size()-1; j++){
-                    if(pieChartData.get(j).getName().equals(allValues[i][0])){
+                for(int j = 0; j < pieChartData.size(); j++){
+                    if(pieChartData.get(j).getName().contains(allValues[i][0].strip())){
                         pieChartData.set(j, new PieChart.Data(allValues[i][0],
                                 pieChartData.get(j).getPieValue()+value));
                         set = true;
+                        break;
                     }
                 }
                 if(!set){
                     pieChartData.add(new PieChart.Data(allValues[i][0], value));
                 }
-
-                System.out.println(allValues[i][0]);
 
                 box_items.getChildren().add(nodes[i]);
             } catch (IOException e) {
