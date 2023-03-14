@@ -1,11 +1,14 @@
 package com.example.ims;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -14,6 +17,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -47,11 +51,20 @@ public class Controller extends DataController implements Initializable{
     private Button btn_add;
 
     @FXML
+    private PieChart value_chart;
+
+    @FXML
     private Label label_value;
     @FXML
     private Label label_amount;
-    double inventoryValue = 0;
-    int inventoryAmount = 0;
+    @FXML
+    private Label label_stock;
+
+    private double inventoryValue = 0;
+    private int inventoryAmount = 0;
+    private int items_out_of_stock = 0;
+    ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+
     SharedStorage storage = SharedStorage.getInstance();
 
     public Controller(){
@@ -67,7 +80,7 @@ public class Controller extends DataController implements Initializable{
 
         storeSelector.getItems().addAll(stores);
         storeSelector.setValue(stores[0]);
-        storeSelector.setValue(stores[0]);
+        storage.setStore(stores[0]);
         storeSelector.setOnAction(this::updateStore);
         updateTable(stores[0]);
 
@@ -80,17 +93,30 @@ public class Controller extends DataController implements Initializable{
 
     private void updateKPI() {
         DecimalFormat twoDecimal = new DecimalFormat("##.00");
-        label_value.setText(String.valueOf(twoDecimal.format(inventoryValue)));
+        label_value.setText("$" + String.valueOf(twoDecimal.format(inventoryValue)));
         label_amount.setText(String.valueOf(inventoryAmount));
+        label_stock.setText(String.valueOf(items_out_of_stock));
+        if(items_out_of_stock == 0){
+            label_stock.setTextFill(Color.color(0,1,0));
+        }else{
+            label_stock.setTextFill(Color.color(1,0,0));
+        }
+
+
+        value_chart.setData(pieChartData);
     }
     private void clearTable() {
         box_items.getChildren().clear();
         inventoryValue = 0;
         inventoryAmount = 0;
+        items_out_of_stock = 0;
+        pieChartData.clear();
     }
     private void updateTable(String currentStore) {
         String[][] allValues;
         allValues = App.scanItems(currentStore);
+        int quantity;
+        double value;
 
         int numRows = 0;
         while(allValues[numRows][0] != null) {
@@ -101,7 +127,6 @@ public class Controller extends DataController implements Initializable{
         Node[] nodes = new Node[numRows];
         for (int i = 0; i < nodes.length; i++) {
             try {
-                final int j = i;
                 nodes[i] = FXMLLoader.load(getClass().getResource("item.fxml"));
                 staticTextBox1.setText(allValues[i][4]);
                 staticTextBox2.setText(allValues[i][5]);
@@ -109,8 +134,31 @@ public class Controller extends DataController implements Initializable{
                 staticTextBox4.setText(allValues[i][3]);
                 staticTextBox5.setText(allValues[i][2]);
                 staticTextBox6.setText(allValues[i][0]);
-                inventoryValue+=Double.valueOf(allValues[i][1]);
-                inventoryAmount+=Integer.valueOf(allValues[i][3]);
+
+                // calculate KPIs
+                quantity = Integer.valueOf(allValues[i][3]);
+                value = (Double.valueOf(allValues[i][1])*quantity);
+                inventoryValue+=value;
+                inventoryAmount+=quantity;
+                if(quantity == 0){
+                    items_out_of_stock++;
+                }
+
+                boolean set = false;
+                System.out.println(pieChartData.size());
+                for(int j = 0; j < pieChartData.size()-1; j++){
+                    if(pieChartData.get(j).getName().equals(allValues[i][0])){
+                        pieChartData.set(j, new PieChart.Data(allValues[i][0],
+                                pieChartData.get(j).getPieValue()+value));
+                        set = true;
+                    }
+                }
+                if(!set){
+                    pieChartData.add(new PieChart.Data(allValues[i][0], value));
+                }
+
+                System.out.println(allValues[i][0]);
+
                 box_items.getChildren().add(nodes[i]);
             } catch (IOException e) {
                 e.printStackTrace();

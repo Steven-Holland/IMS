@@ -13,23 +13,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.*;
 
-/*
-Functions:
-    getTable(int storeID)
-        Returns the Table object for the storeID that was supplied.
-    getItemInfo(int storeID, int itemID)
-        Returns in json the attributes of the item searched for.
-    getAllItems(int storeID)
-        Returns the entire database in json for the specified storeID
-    newItem(int storeID, int itemID, String itemCategory, int itemExpiration,boolean itemExpires, String itemName,
-                                                                                  int itemPrice, int itemQuantity)
-        Adds a new item to the inventory database of the storeID supplied.
-    removeItem(int storeID, int itemID)
-        Removes an item from the inventory database of the storeID supplied.
-Notes:
-    If you do newItem() to an itemID that already exists, it will overwrite the old values
-    The removeItem() will not fail if the item being removed does not exist.
-*/
 
 public class App extends Application {
     public static Stage stage_primary; // application's primary stage
@@ -64,7 +47,7 @@ public class App extends Application {
          * --------------------------------------*/
 
         // Get item and print its attributes
-        Map<String,AttributeValue> item = getItem("TestTable", "0002");
+        Map<String,AttributeValue> item = getItem("PartyStore0001", "0002");
         if (item != null) {
             Set<String> keys = item.keySet();
             //System.out.println("Amazon DynamoDB table attributes: \n");

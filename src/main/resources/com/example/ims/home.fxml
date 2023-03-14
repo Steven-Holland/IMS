@@ -2,6 +2,7 @@
 
 <?import com.gluonhq.charm.glisten.control.TextField?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
@@ -20,46 +21,6 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="850.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ims.Controller">
     <children>
-        <Pane fx:id="pane_dash" layoutX="137.0" layoutY="51.0" prefHeight="450.0" prefWidth="713.0">
-            <children>
-                <Pane layoutX="38.0" layoutY="225.0" prefHeight="200.0" prefWidth="624.0" style="-fx-background-color: #F4F4F4;" />
-                <Pane layoutX="38.0" layoutY="104.0" prefHeight="101.0" prefWidth="177.0" style="-fx-background-color: #F4F4F4;">
-                    <children>
-                        <Label alignment="CENTER" layoutX="9.0" layoutY="14.0" prefHeight="27.0" prefWidth="159.0" text="Inventory Turnover Ratio" textAlignment="CENTER" />
-                        <Label fx:id="label_itr" alignment="CENTER" layoutX="10.0" layoutY="41.0" prefHeight="50.0" prefWidth="159.0" text="1.2" textAlignment="CENTER">
-                            <font>
-                                <Font size="26.0" />
-                            </font>
-                        </Label>
-                    </children>
-                </Pane>
-                <Pane layoutX="262.0" layoutY="104.0" prefHeight="101.0" prefWidth="177.0" style="-fx-background-color: #F4F4F4;">
-                    <children>
-                        <Label alignment="CENTER" layoutX="17.0" layoutY="14.0" prefHeight="27.0" prefWidth="144.0" text="Inventory Value" textAlignment="CENTER" />
-                        <Label fx:id="label_value" alignment="CENTER" layoutX="9.0" layoutY="41.0" prefHeight="50.0" prefWidth="159.0" text="\$1,600,000" textAlignment="CENTER">
-                            <font>
-                                <Font size="25.0" />
-                            </font>
-                        </Label>
-                    </children>
-                </Pane>
-                <Pane layoutX="485.0" layoutY="104.0" prefHeight="101.0" prefWidth="177.0" style="-fx-background-color: #F4F4F4;">
-                    <children>
-                        <Label alignment="CENTER" layoutX="17.0" layoutY="14.0" prefHeight="27.0" prefWidth="144.0" text="Number of Items" textAlignment="CENTER" />
-                        <Label fx:id="label_amount" alignment="CENTER" layoutX="9.0" layoutY="41.0" prefHeight="50.0" prefWidth="159.0" text="127,832" textAlignment="CENTER">
-                            <font>
-                                <Font size="25.0" />
-                            </font>
-                        </Label>
-                    </children>
-                </Pane>
-                <Label layoutX="38.0" layoutY="34.0" text="Inventory Management KPIs">
-                    <font>
-                        <Font size="18.0" />
-                    </font>
-                </Label>
-            </children>
-        </Pane>
         <VBox layoutY="51.0" prefHeight="450.0" prefWidth="137.0" style="-fx-background-color: #C1D18A;">
             <children>
                 <ToggleButton fx:id="btn_dash" mnemonicParsing="false" onAction="#changePane" prefHeight="50.0" prefWidth="140.0" style="-fx-background-color: #C1D18A;" text="Dashboard" />
@@ -140,5 +101,48 @@
             </ScrollPane>
             </children>
       </Pane>
+        <Pane fx:id="pane_dash" layoutX="137.0" layoutY="51.0" prefHeight="450.0" prefWidth="713.0">
+            <children>
+                <Pane layoutX="38.0" layoutY="225.0" prefHeight="200.0" prefWidth="624.0" style="-fx-background-color: #F4F4F4;">
+               <children>
+                  <PieChart fx:id="value_chart" labelLineLength="15.0" layoutX="101.0" layoutY="14.0" prefHeight="187.0" prefWidth="423.0" title="Value by Category" />
+               </children></Pane>
+                <Pane layoutX="38.0" layoutY="104.0" prefHeight="101.0" prefWidth="177.0" style="-fx-background-color: #F4F4F4;">
+                    <children>
+                        <Label alignment="CENTER" layoutX="9.0" layoutY="14.0" prefHeight="27.0" prefWidth="159.0" text="Items Out of Stock" textAlignment="CENTER" />
+                        <Label fx:id="label_stock" alignment="CENTER" layoutX="10.0" layoutY="41.0" prefHeight="50.0" prefWidth="159.0" text="0" textAlignment="CENTER">
+                            <font>
+                                <Font size="26.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </Pane>
+                <Pane layoutX="262.0" layoutY="104.0" prefHeight="101.0" prefWidth="177.0" style="-fx-background-color: #F4F4F4;">
+                    <children>
+                        <Label alignment="CENTER" layoutX="17.0" layoutY="14.0" prefHeight="27.0" prefWidth="144.0" text="Inventory Value" textAlignment="CENTER" />
+                        <Label fx:id="label_value" alignment="CENTER" layoutX="9.0" layoutY="41.0" prefHeight="50.0" prefWidth="159.0" text="\$1,600,000" textAlignment="CENTER">
+                            <font>
+                                <Font size="25.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </Pane>
+                <Pane layoutX="485.0" layoutY="104.0" prefHeight="101.0" prefWidth="177.0" style="-fx-background-color: #F4F4F4;">
+                    <children>
+                        <Label alignment="CENTER" layoutX="17.0" layoutY="14.0" prefHeight="27.0" prefWidth="144.0" text="Number of Items" textAlignment="CENTER" />
+                        <Label fx:id="label_amount" alignment="CENTER" layoutX="9.0" layoutY="41.0" prefHeight="50.0" prefWidth="159.0" text="127,832" textAlignment="CENTER">
+                            <font>
+                                <Font size="25.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </Pane>
+                <Label layoutX="38.0" layoutY="34.0" text="Inventory Management KPIs">
+                    <font>
+                        <Font size="18.0" />
+                    </font>
+                </Label>
+            </children>
+        </Pane>
     </children>
 </AnchorPane>
